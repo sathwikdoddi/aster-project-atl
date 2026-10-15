@@ -1,0 +1,164 @@
+[
+  {
+    "id": "demo-jordan",
+    "slug": "jordan-ellis",
+    "name": "Jordan Ellis",
+    "isDemo": true,
+    "summary": "A neighbor who brought people together. A love of music, a well-worn sketchbook, and a habit of making everyone feel at home.",
+    "remembrance": "Remembering the everyday moments that make a life.",
+    "location": { "city": "Atlanta", "state": "Georgia" },
+    "birthDate": "1995",
+    "deathDate": "2022-06",
+    "passions": ["Music", "Drawing", "Community"],
+    "color": "lavender",
+    "sections": [
+      {
+        "category": "early-life",
+        "title": "A place to begin",
+        "paragraphs": [
+          "In this fictional example, Jordan grew up in Atlanta, surrounded by an extended family and a close circle of neighbors. Weekend meals and afternoons spent drawing were a familiar part of childhood.",
+          "This section is a template for family-approved memories, formative experiences, and the places that mattered. Replace this fictional narrative with reviewed material before publishing a real case."
+        ],
+        "sourceIds": ["demo-template"]
+      },
+      {
+        "category": "passions",
+        "title": "The things that brought joy",
+        "paragraphs": [
+          "Jordan loved discovering new music and filling sketchbooks with drawings of everyday places. In this sample story, sharing a playlist was a small way to make a new friend.",
+          "A real record could include creative work, favorite activities, community involvement, and recollections shared with permission."
+        ],
+        "sourceIds": ["demo-template"]
+      },
+      {
+        "category": "death",
+        "title": "Documenting what happened",
+        "paragraphs": [
+          "June 2022 is an invented date used to demonstrate how a case appears on the master timeline. No actual death or police incident is described by this record.",
+          "For a real case, this section should provide a reviewed account, distinguish established facts from allegations, and link each account to its source. It may remain empty while information is being reviewed."
+        ],
+        "sourceIds": ["demo-template"]
+      },
+      {
+        "category": "investigation",
+        "title": "Following the case",
+        "paragraphs": [
+          "This fictional record includes a placeholder investigation milestone to show how a case can develop over time. It does not describe an actual investigation, legal finding, or outcome.",
+          "Future entries can document publicly verified updates with dates and source references. Unknown dates should remain unknown."
+        ],
+        "sourceIds": ["demo-template"]
+      },
+      {
+        "category": "legacy",
+        "title": "What continues",
+        "paragraphs": [
+          "In this sample, friends imagine a gathering centered on music and art: a place to share memories and keep a person's interests at the center of their story.",
+          "For real cases, include family-approved memorials, community initiatives, and ways a person's life continues to be remembered."
+        ],
+        "sourceIds": ["demo-template"]
+      }
+    ],
+    "events": [
+      {
+        "id": "jordan-birth",
+        "date": "1995",
+        "category": "early-life",
+        "title": "Early years in Atlanta",
+        "description": "A fictional starting point for childhood memories and family history. Only the year is specified.",
+        "sourceIds": ["demo-template"]
+      },
+      {
+        "id": "jordan-art",
+        "date": "2016",
+        "category": "passions",
+        "title": "Making room for creativity",
+        "description": "An invented milestone illustrating how an interest or community activity can appear alongside case events.",
+        "sourceIds": ["demo-template"]
+      },
+      {
+        "id": "jordan-death",
+        "date": "2022-06",
+        "category": "death",
+        "title": "Incident documentation",
+        "description": "A placeholder for a reviewed account. The date is fictional and no specific day is assumed.",
+        "sourceIds": ["demo-template"]
+      },
+      {
+        "id": "jordan-update",
+        "date": "2022-09",
+        "category": "investigation",
+        "title": "Case update",
+        "description": "A fictional dated entry showing where a verified investigation update would appear.",
+        "sourceIds": ["demo-template"]
+      },
+      {
+        "id": "jordan-memory",
+        "date": null,
+        "category": "legacy",
+        "title": "A gathering to remember",
+        "description": "An invented remembrance with no documented date. Undated entries appear after the dated timeline.",
+        "sourceIds": ["demo-template"]
+      }
+    ],
+    "sources": [
+      {
+        "id": "demo-template",
+        "title": "Fictional prototype content",
+        "url": null,
+        "note": "Written for this UI demonstration. This is not evidence, a testimony, or a record of a real person."
+      }
+    ],
+    "updatedAt": "2026-10-15"
+  },
+  {
+    "id": "demo-maya",
+    "slug": "maya-bennett",
+    "name": "Maya Bennett",
+    "isDemo": true,
+    "summary": "A curious gardener and an enthusiastic cook. This partial example leaves room for a story still being gathered.",
+    "remembrance": null,
+    "location": { "city": "Decatur", "state": "Georgia" },
+    "birthDate": null,
+    "deathDate": "2021",
+    "passions": ["Gardening", "Cooking"],
+    "color": "sage",
+    "sections": [
+      {
+        "category": "passions",
+        "title": "A little room to grow",
+        "paragraphs": [
+          "In this fictional example, Maya enjoyed growing herbs and sharing meals with friends. This short entry demonstrates a record that has only one section filled in.",
+          "The remaining categories are intentionally empty. No real person or incident is represented."
+        ],
+        "sourceIds": ["demo-template"]
+      }
+    ],
+    "events": [],
+    "sources": [
+      {
+        "id": "demo-template",
+        "title": "Fictional prototype content",
+        "url": null,
+        "note": "An incomplete demonstration record. Not a real case."
+      }
+    ],
+    "updatedAt": "2026-10-15"
+  },
+  {
+    "id": "demo-sam",
+    "slug": "sam-rivera",
+    "name": "Sam Rivera",
+    "isDemo": true,
+    "summary": "A starting point for another story. This example shows how the archive handles a record with very little information.",
+    "remembrance": null,
+    "location": { "city": null, "state": null },
+    "birthDate": null,
+    "deathDate": null,
+    "passions": [],
+    "color": "peach",
+    "sections": [],
+    "events": [],
+    "sources": [],
+    "updatedAt": "2026-10-15"
+  }
+]
