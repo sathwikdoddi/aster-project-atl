@@ -24,7 +24,7 @@ function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
           <span>Fictional sample</span>
           <span>
             {record.sections.length
-              ? `${record.sections.length} of 5 sections`
+              ? `${record.sections.length} documented ${record.sections.length === 1 ? "section" : "sections"}`
               : "Story in progress"}
           </span>
         </div>
@@ -40,7 +40,6 @@ function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
           {record.passions.map((passion) => (
             <span key={passion}>{passion}</span>
           ))}
-          {!record.passions.length && <span>More to be documented</span>}
         </div>
         <div className="card-actions">
           <Link className="text-link" href={`/cases/${record.slug}`}>
@@ -68,7 +67,7 @@ function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
                 : "Sections will appear as information is added."}
             </p>
             <p>
-              <strong>Timeline date:</strong> {formatDate(record.deathDate)}
+              <strong>Timeline date:</strong> {formatDate(record.incidentDate)}
             </p>
             <p>
               {record.events.length
@@ -85,7 +84,9 @@ function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
 export function CaseExplorer({ cases }: { cases: CaseRecord[] }) {
   const [view, setView] = useState<"timeline" | "grid">("timeline");
   const groups = Array.from(
-    new Set(cases.map((record) => record.deathDate?.slice(0, 4) ?? "Undated")),
+    new Set(
+      cases.map((record) => record.incidentDate?.slice(0, 4) ?? "Undated"),
+    ),
   );
 
   return (
@@ -167,7 +168,7 @@ export function CaseExplorer({ cases }: { cases: CaseRecord[] }) {
                 {cases
                   .filter(
                     (record) =>
-                      (record.deathDate?.slice(0, 4) ?? "Undated") === year,
+                      (record.incidentDate?.slice(0, 4) ?? "Undated") === year,
                   )
                   .map((record) => (
                     <CaseCard

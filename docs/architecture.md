@@ -2,13 +2,13 @@
 
 ## Responsibilities
 
-| Location           | Responsibility                                                                  | Status                                |
-| ------------------ | ------------------------------------------------------------------------------- | ------------------------------------- |
-| `apps/web`         | Public archive, profiles, timelines, read-only public API                       | Working with fictional fixtures       |
-| `apps/admin`       | Owner login, private case review, display selection, preview, publish/unpublish | Placeholder only                      |
-| `packages/content` | Public output validation/types, display helpers, public repository contract     | Shared workspace package              |
-| Airtable           | Evolving internal cases, families, agencies, requests, logs, and media          | Not connected                         |
-| Publication store  | Approved public snapshots and publication metadata                              | Not implemented; storage to be chosen |
+| Location           | Responsibility                                                                  | Status                                               |
+| ------------------ | ------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `apps/web`         | Public archive, profiles, timelines, read-only public API                       | Working with fixtures or live allowlisted demo cases |
+| `apps/admin`       | Owner login, private case review, display selection, preview, publish/unpublish | Placeholder only                                     |
+| `packages/content` | Public output validation/types, display helpers, public repository contract     | Shared workspace package                             |
+| Airtable           | Evolving internal cases, families, agencies, requests, logs, and media          | Fictional demo Cases connected                       |
+| Publication store  | Approved public snapshots and publication metadata                              | Not implemented; storage to be chosen                |
 
 ```mermaid
 flowchart LR
@@ -18,7 +18,7 @@ flowchart LR
   D --> E[Public website and read-only API]
 ```
 
-The current mock repository stands in for the snapshot store. No admin workflow or approval enforcement has been implemented yet. Public sample records are already shaped as display-ready content, not raw Airtable rows.
+The mock repository stands in for the future snapshot store. A temporary live adapter additionally reads only the two allowlisted fictional cases in the demo base; see [Airtable setup](airtable.md). This is an integration proof, not the production publication boundary. No admin workflow or approval enforcement has been implemented yet. Public sample records are already shaped as display-ready content, not raw Airtable rows.
 
 ## Publishing behavior to implement
 
@@ -48,4 +48,4 @@ Use fictional records until these choices and the review process are agreed. Liv
 
 The `color` and other presentation fields in existing fixtures are UI concerns, not requirements imposed on 180 Consulting's base. The current `/api/cases` routes remain public and read-only. Any future admin routes must belong to the authenticated app and must not reuse the public endpoints for private data.
 
-The current public renderer still offers five fixed story categories. When implementing owner selections, extend the public contract and renderer to distinguish an intentionally hidden section from a visible section with missing information, and honor the selected order. Hidden content must be excluded from the public payload, not merely hidden with CSS.
+The public renderer now follows the supplied section order and renders populated sections only. When implementing owner selections, distinguish an intentionally hidden section from a visible section with missing information. Hidden content must be excluded from the public payload, not merely hidden with CSS.

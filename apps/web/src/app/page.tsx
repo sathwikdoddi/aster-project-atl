@@ -3,6 +3,8 @@ import { CaseExplorer } from "@/components/case-explorer";
 import { AsterMark, Arrow } from "@/components/icons";
 import { publicCaseRepository } from "@/server/public-cases";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const cases = await publicCaseRepository.list();
   return (

@@ -37,29 +37,28 @@ export default function AboutPage() {
           <section id="prototype">
             <h2>About this prototype</h2>
             <p>
-              This is the first development milestone, covering October 12–18.
-              All names, stories, locations, and dates in the archive are
-              fictional examples. They do not document real people or police
-              incidents.
+              This is a development prototype. All names, stories, locations,
+              and dates in the archive are fictional examples. They do not
+              document real people or police incidents.
             </p>
             <p>
-              The archive includes one detailed sample and two partial examples
-              to demonstrate the structure. Missing information is shown openly,
-              and illustrations are abstract flowers rather than photographs of
-              real people.
+              The archive uses fictional profiles to demonstrate the structure.
+              Missing information is shown openly, and illustrations are
+              abstract flowers rather than photographs of real people.
             </p>
           </section>
           <section>
             <h2>Building a shared foundation.</h2>
             <p>
-              The frontend currently reads local sample data. A small API and a
-              shared schema provide a starting point for integration with the
-              datastore being planned with GT’s 180 Consulting team.
+              The website can read fictional cases from Aster’s Airtable demo
+              base through its backend. The live demo is limited to specifically
+              identified sample records.
             </p>
             <p>
-              The data format, source review process, and publication workflow
-              still need to be agreed with Aster and 180 Consulting. Real case
-              material should be reviewed and approved before it is added.
+              A future owner dashboard will control which information is
+              published. The source review and publication workflow still need
+              to be agreed with Aster and 180 Consulting. Real case material
+              should be reviewed and approved before it is added.
             </p>
           </section>
           <Link className="button primary" href="/#explore">

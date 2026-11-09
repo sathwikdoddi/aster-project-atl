@@ -13,12 +13,14 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:e2e": "npm run test:e2e --workspace=@aster/web",
+    "seed:airtable": "node --env-file=.env --import tsx scripts/seed-airtable-demo.ts",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "prettier": "^3.9.10"
+    "prettier": "^3.9.10",
+    "tsx": "^4.20.0"
   },
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=22.0.0"
   }
 }

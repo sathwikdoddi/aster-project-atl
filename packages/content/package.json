@@ -6,7 +6,8 @@
     "./schema": "./src/case-schema.ts",
     "./format": "./src/format.ts",
     "./repository": "./src/repository.ts",
-    "./mock": "./src/mock-repository.ts"
+    "./mock": "./src/mock-repository.ts",
+    "./demo": "./src/demo-identities.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

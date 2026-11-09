@@ -1,31 +1,31 @@
-# Public content contract — v1.0
+# Public content contract — v1.1
 
-This is the current **public display payload**, not the raw Airtable schema or a finalized publishing contract. Airtable will hold working records; the future owner dashboard will select content and publish approved snapshots. See [architecture](architecture.md). The live integration and admin workflow are not implemented yet.
+This is the current **public display payload**, not the raw Airtable schema or a finalized publishing contract. Airtable will hold working records; the future owner dashboard will select content and publish approved snapshots. See [architecture](architecture.md). A temporary demo adapter now reads two explicitly fictional Airtable cases. The owner dashboard and production publishing workflow are not implemented yet.
 
 The executable schema is `packages/content/src/case-schema.ts`. Fictional published-output fixtures are in `packages/content/src/mock/published-cases.json`. The collection validator also rejects duplicate case IDs/slugs, duplicate section categories/event IDs/source IDs, invalid dates, missing source references, and non-HTTP source links.
 
 ## Case shape
 
-| Field                    | Type                                              | Meaning                                                               |
-| ------------------------ | ------------------------------------------------- | --------------------------------------------------------------------- |
-| `id`                     | string                                            | Stable source-system identifier; independent of public name.          |
-| `slug`                   | string                                            | Unique lowercase URL identifier, such as `jordan-ellis`.              |
-| `name`                   | string                                            | Approved public display name.                                         |
-| `isDemo`                 | boolean                                           | True for fictional examples. All current records are demos.           |
-| `summary`                | string                                            | Short person-centered introduction.                                   |
-| `remembrance`            | string or null                                    | Optional closing remembrance.                                         |
-| `location`               | `{ city: string or null, state: string or null }` | Public location; either field can be unknown.                         |
-| `birthDate`, `deathDate` | partial date or null                              | Preserve precision; do not infer a missing month/day.                 |
-| `passions`               | string array                                      | Interests displayed as labels. Empty is valid.                        |
-| `color`                  | `lavender`, `sage`, or `peach`                    | Prototype display accent; can be derived in a future adapter.         |
-| `sections`               | section array                                     | Zero to five categories. Missing sections show a placeholder.         |
-| `events`                 | event array                                       | Dated or undated moments for the individual timeline. Empty is valid. |
-| `sources`                | source array                                      | Sources referenced by sections and events. Empty is valid.            |
-| `updatedAt`              | partial date                                      | Date the public record was last updated.                              |
+| Field                       | Type                                              | Meaning                                                                                       |
+| --------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `id`                        | string                                            | Stable source-system identifier; independent of public name.                                  |
+| `slug`                      | string                                            | Unique lowercase URL identifier, such as `jordan-ellis`.                                      |
+| `name`                      | string                                            | Approved public display name.                                                                 |
+| `isDemo`                    | boolean                                           | True for fictional examples. All current records are demos.                                   |
+| `summary`                   | string                                            | Short person-centered introduction.                                                           |
+| `remembrance`               | string or null                                    | Optional closing remembrance.                                                                 |
+| `location`                  | `{ city: string or null, state: string or null }` | Public location; either field can be unknown.                                                 |
+| `birthDate`, `incidentDate` | partial date or null                              | Preserve precision; do not infer a missing month/day.                                         |
+| `passions`                  | string array                                      | Interests displayed as labels. Empty is valid.                                                |
+| `color`                     | `lavender`, `sage`, or `peach`                    | Prototype display accent; can be derived in a future adapter.                                 |
+| `sections`                  | section array                                     | Ordered public sections. Only populated sections render; an empty story gets one placeholder. |
+| `events`                    | event array                                       | Dated or undated moments for the individual timeline. Empty is valid.                         |
+| `sources`                   | source array                                      | Sources referenced by sections and events. Empty is valid.                                    |
+| `updatedAt`                 | partial date or null                              | Date the public record was last updated, or null if unknown.                                  |
 
-A partial date is `YYYY`, `YYYY-MM`, or `YYYY-MM-DD`. Unknown dates use `null`. No dummy dates such as January 1. The master timeline uses `deathDate` for year grouping, newest first, with undated cases last. Each case timeline sorts dated events oldest first, then undated memories. Equal/overlapping partial dates do not imply a known exact order.
+A partial date is `YYYY`, `YYYY-MM`, or `YYYY-MM-DD`. Unknown dates use `null`. No dummy dates such as January 1. The master timeline uses `incidentDate` for year grouping, newest first, with undated cases last. Each case timeline sorts dated events oldest first, then undated memories. Equal/overlapping partial dates do not imply a known exact order.
 
-Sections: `{ category, title, paragraphs: string[], sourceIds: string[] }`. Categories: `early-life`, `passions`, `death`, `investigation`, `legacy`.
+Sections: `{ category, title, paragraphs: string[], sourceIds: string[] }`. Categories: `overview`, `early-life`, `passions`, `death`, `investigation`, `legacy`.
 
 Events: `{ id, date: partial date or null, category, title, description, sourceIds: string[] }`.
 
@@ -38,7 +38,7 @@ Sources: `{ id, title, url: HTTP(S) URL or null, note: string or null }`. A sour
 ```json
 {
   "data": ["<CaseRecord objects>"],
-  "meta": { "count": 3, "schemaVersion": "1.0", "dataSource": "mock" }
+  "meta": { "count": 3, "schemaVersion": "1.1", "dataSource": "mock" }
 }
 ```
 
@@ -47,7 +47,7 @@ Sources: `{ id, title, url: HTTP(S) URL or null, note: string or null }`. A sour
 ```json
 {
   "data": "<CaseRecord object>",
-  "meta": { "schemaVersion": "1.0", "dataSource": "mock" }
+  "meta": { "schemaVersion": "1.1", "dataSource": "mock" }
 }
 ```
 
@@ -67,3 +67,5 @@ These read-only endpoints belong to `apps/web` and have no search, pagination, a
 6. Choose the publication store, server-side credentials, cache invalidation, pagination, and error handling.
 
 Implement a read-only `PublicCaseRepository` adapter in `apps/web/src/server/public-cases.ts` when the publication store is ready. Its shared interface is `packages/content/src/repository.ts`. Airtable-specific field mapping belongs behind the future admin backend. Update demo labels and copy when replacing fictional content with approved material.
+
+In v1.1, `incidentDate` replaces `deathDate`: the Airtable Incident Date field is not necessarily a date of death. Location objects may include a `label` preserving the source location without guessing a city/state split. `updatedAt` is nullable because the current Airtable schema has no last-modified field. See [the Airtable mapping](airtable.md).

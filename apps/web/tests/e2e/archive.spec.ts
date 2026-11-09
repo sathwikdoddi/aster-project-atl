@@ -90,7 +90,7 @@ test("partial records show deliberate empty states and unknown stories show the 
     page.getByText("This part of the story has not been documented yet.", {
       exact: true,
     }),
-  ).toHaveCount(5);
+  ).toHaveCount(1);
   await expect(
     page.getByText("No milestones have been documented yet.", { exact: true }),
   ).toBeVisible();
@@ -110,7 +110,7 @@ test("API returns the shared mock schema and a stable not-found response", async
   const payload = await list.json();
   expect(payload.meta).toEqual({
     count: 3,
-    schemaVersion: "1.0",
+    schemaVersion: "1.1",
     dataSource: "mock",
   });
   expect(

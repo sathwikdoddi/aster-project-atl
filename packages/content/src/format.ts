@@ -13,8 +13,10 @@ export function formatDate(value: string | null): string {
 export function formatLocation(location: {
   city: string | null;
   state: string | null;
+  label?: string | null;
 }): string {
   return (
+    location.label ||
     [location.city, location.state].filter(Boolean).join(", ") ||
     "Location not yet documented"
   );

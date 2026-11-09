@@ -13,7 +13,7 @@ test("all sample records are valid, fictional, and cover full and partial storie
   assert.ok(records.every((record) => record.isDemo));
   assert.equal(records[0].sections.length, 5);
   assert.ok(
-    records.some((record) => !record.sections.length && !record.deathDate),
+    records.some((record) => !record.sections.length && !record.incidentDate),
   );
 });
 
@@ -74,7 +74,7 @@ test("source links accept only web protocols", () => {
 test("master timeline is newest first with unknown dates last; individual events are oldest first", () => {
   const records = caseCollectionSchema.parse(cases);
   const original = records.map((record) => record.id);
-  const ordered = sortByDate(records, (record) => record.deathDate, "desc");
+  const ordered = sortByDate(records, (record) => record.incidentDate, "desc");
   assert.deepEqual(
     ordered.map((record) => record.slug),
     ["jordan-ellis", "maya-bennett", "sam-rivera"],

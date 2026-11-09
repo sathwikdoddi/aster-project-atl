@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { AsterMark, Arrow, Pin } from "@/components/icons";
 import { StoryTimeline } from "@/components/story-timeline";
 import { publicCaseRepository } from "@/server/public-cases";
-import { categories, categoryLabels } from "@aster/content/schema";
+import { categoryLabels } from "@aster/content/schema";
 import { formatDate, formatLocation } from "@aster/content/format";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -19,6 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CasePage({ params }: Props) {
   const record = await publicCaseRepository.findBySlug((await params).slug);
   if (!record) notFound();
+  const sections = record.sections.filter(
+    (section) => section.paragraphs.length,
+  );
   return (
     <main id="main" className="detail-page">
       <Link className="back-link" href="/#explore">
@@ -58,17 +61,21 @@ export default async function CasePage({ params }: Props) {
           page does not describe a real person, incident, or investigation.
         </p>
       </aside>
-      <nav className="section-nav" aria-label="Story sections">
-        {categories.map((category, index) => (
-          <a href={`#${category}`} key={category}>
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            {categoryLabels[category]}
-          </a>
-        ))}
-        <a href="#milestones-heading">
-          Timeline <Arrow diagonal />
-        </a>
-      </nav>
+      {(sections.length > 0 || record.events.length > 0) && (
+        <nav className="section-nav" aria-label="Story sections">
+          {sections.map(({ category }, index) => (
+            <a href={`#${category}`} key={category}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              {categoryLabels[category]}
+            </a>
+          ))}
+          {!!record.events.length && (
+            <a href="#milestones-heading">
+              Timeline <Arrow diagonal />
+            </a>
+          )}
+        </nav>
+      )}
       <div className="story-body">
         <aside className="story-sidebar">
           <p className="eyebrow">THE STORY AT A GLANCE</p>
@@ -78,8 +85,8 @@ export default async function CasePage({ params }: Props) {
               <dd>{formatDate(record.birthDate)}</dd>
             </div>
             <div>
-              <dt>Death / incident date</dt>
-              <dd>{formatDate(record.deathDate)}</dd>
+              <dt>Incident date</dt>
+              <dd>{formatDate(record.incidentDate)}</dd>
             </div>
             <div>
               <dt>Place</dt>
@@ -87,7 +94,10 @@ export default async function CasePage({ params }: Props) {
             </div>
             <div>
               <dt>Documentation</dt>
-              <dd>{record.sections.length} of 5 sections populated</dd>
+              <dd>
+                {sections.length} documented{" "}
+                {sections.length === 1 ? "section" : "sections"}
+              </dd>
             </div>
           </dl>
           <AsterMark />
@@ -96,10 +106,8 @@ export default async function CasePage({ params }: Props) {
           </p>
         </aside>
         <div className="story-sections">
-          {categories.map((category, index) => {
-            const section = record.sections.find(
-              (item) => item.category === category,
-            );
+          {sections.map((section, index) => {
+            const { category } = section;
             return (
               <section key={category} id={category} className="story-section">
                 <p className="eyebrow">
@@ -135,6 +143,16 @@ export default async function CasePage({ params }: Props) {
               </section>
             );
           })}
+          {!sections.length && (
+            <section className="story-section">
+              <p className="eyebrow">ROOM FOR STORIES TO COME</p>
+              <h2>A story still taking shape.</h2>
+              <div className="missing-content">
+                <span className="missing-dot" />
+                <p>This part of the story has not been documented yet.</p>
+              </div>
+            </section>
+          )}
         </div>
       </div>
       <StoryTimeline events={record.events} sources={record.sources} />
@@ -171,7 +189,9 @@ export default async function CasePage({ params }: Props) {
           <p>No sources have been added yet.</p>
         )}
         <p className="source-note">
-          Record last updated {formatDate(record.updatedAt)}
+          {record.updatedAt
+            ? `Record last updated ${formatDate(record.updatedAt)}`
+            : "Record update date not yet documented."}
         </p>
       </section>
       <div className="detail-end">

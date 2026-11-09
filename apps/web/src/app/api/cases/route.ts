@@ -1,4 +1,4 @@
-import { publicCaseRepository } from "@/server/public-cases";
+import { publicCaseRepository, publicDataSource } from "@/server/public-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -7,7 +7,11 @@ export async function GET() {
     const cases = await publicCaseRepository.list();
     return Response.json({
       data: cases,
-      meta: { count: cases.length, schemaVersion: "1.0", dataSource: "mock" },
+      meta: {
+        count: cases.length,
+        schemaVersion: "1.1",
+        dataSource: publicDataSource,
+      },
     });
   } catch (error) {
     console.error("Unable to load case collection", error);

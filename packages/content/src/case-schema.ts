@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const categories = [
+  "overview",
   "early-life",
   "passions",
   "death",
@@ -8,6 +9,7 @@ export const categories = [
   "legacy",
 ] as const;
 export const categoryLabels: Record<(typeof categories)[number], string> = {
+  overview: "Their story",
   "early-life": "Early life",
   passions: "Passions",
   death: "Death",
@@ -41,9 +43,10 @@ export const caseSchema = z
     location: z.object({
       city: z.string().nullable(),
       state: z.string().nullable(),
+      label: z.string().nullable().default(null),
     }),
     birthDate: partialDateSchema.nullable(),
-    deathDate: partialDateSchema.nullable(),
+    incidentDate: partialDateSchema.nullable(),
     passions: z.array(z.string().min(1)),
     color: z.enum(["lavender", "sage", "peach"]),
     sections: z.array(
@@ -75,7 +78,7 @@ export const caseSchema = z
         note: z.string().nullable(),
       }),
     ),
-    updatedAt: partialDateSchema,
+    updatedAt: partialDateSchema.nullable(),
   })
   .superRefine((record, ctx) => {
     const sourceIds = new Set(record.sources.map((source) => source.id));

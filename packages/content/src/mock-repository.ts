@@ -8,7 +8,7 @@ export const mockPublishedCaseRepository: PublicCaseRepository = {
   async list() {
     return sortByDate(
       caseCollectionSchema.parse(mockPublishedCases),
-      (record) => record.deathDate,
+      (record) => record.incidentDate,
       "desc",
     );
   },
