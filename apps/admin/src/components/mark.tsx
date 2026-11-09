@@ -12,7 +12,7 @@ export function Mark({ className = "" }: { className?: string }) {
           transform={`rotate(${index * 30} 50 50)`}
         />
       ))}
-      <circle cx="50" cy="50" r="9" fill="currentColor" />
+      <circle cx="50" cy="50" r="9" fill="#f4d800" />
     </svg>
   );
 }

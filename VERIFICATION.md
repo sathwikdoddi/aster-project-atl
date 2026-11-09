@@ -1,5 +1,9 @@
 # Verification
 
+## November 9, 2026 — Aster visual theme
+
+Updated both apps to the supplied blue/yellow/charcoal/white reference palette, sans-serif headings, rectangular controls, and blue flower marks with yellow centers. Reviewed desktop public/admin and mobile editor screenshots using fictional records. Both production builds and all 12 existing desktop/mobile browser checks pass; publishing and data access behavior are unchanged.
+
 ## November 9, 2026 — Owner dashboard and publishing
 
 | Check                | Result                                                                                                                                                                                                                                                         |
