@@ -1,6 +1,6 @@
-# Public content contract — v1.1
+# Public content contract — v1.2
 
-This is the current **public display payload**, not the raw Airtable schema or a finalized publishing contract. Airtable will hold working records; the future owner dashboard will select content and publish approved snapshots. See [architecture](architecture.md). A temporary demo adapter now reads two explicitly fictional Airtable cases. The owner dashboard and production publishing workflow are not implemented yet.
+This is the current **public display payload**, not the raw Airtable schema or a finalized publishing contract. Airtable will hold working records; the future owner dashboard will select content and publish approved snapshots. See [architecture](architecture.md). A temporary demo adapter now reads two explicitly fictional Airtable cases. The owner dashboard now saves private drafts and publishes approved snapshots through Supabase. See [admin setup](admin-setup.md).
 
 The executable schema is `packages/content/src/case-schema.ts`. Fictional published-output fixtures are in `packages/content/src/mock/published-cases.json`. The collection validator also rejects duplicate case IDs/slugs, duplicate section categories/event IDs/source IDs, invalid dates, missing source references, and non-HTTP source links.
 
@@ -38,7 +38,7 @@ Sources: `{ id, title, url: HTTP(S) URL or null, note: string or null }`. A sour
 ```json
 {
   "data": ["<CaseRecord objects>"],
-  "meta": { "count": 3, "schemaVersion": "1.1", "dataSource": "mock" }
+  "meta": { "count": 3, "schemaVersion": "1.2", "dataSource": "mock" }
 }
 ```
 
@@ -47,7 +47,7 @@ Sources: `{ id, title, url: HTTP(S) URL or null, note: string or null }`. A sour
 ```json
 {
   "data": "<CaseRecord object>",
-  "meta": { "schemaVersion": "1.1", "dataSource": "mock" }
+  "meta": { "schemaVersion": "1.2", "dataSource": "mock" }
 }
 ```
 
@@ -68,4 +68,6 @@ These read-only endpoints belong to `apps/web` and have no search, pagination, a
 
 Implement a read-only `PublicCaseRepository` adapter in `apps/web/src/server/public-cases.ts` when the publication store is ready. Its shared interface is `packages/content/src/repository.ts`. Airtable-specific field mapping belongs behind the future admin backend. Update demo labels and copy when replacing fictional content with approved material.
 
-In v1.1, `incidentDate` replaces `deathDate`: the Airtable Incident Date field is not necessarily a date of death. Location objects may include a `label` preserving the source location without guessing a city/state split. `updatedAt` is nullable because the current Airtable schema has no last-modified field. See [the Airtable mapping](airtable.md).
+In v1.2, `incidentDate` replaces `deathDate`: the Airtable Incident Date field is not necessarily a date of death. Location objects may include a `label` preserving the source location without guessing a city/state split. `updatedAt` is nullable because the current Airtable schema has no last-modified field. See [the Airtable mapping](airtable.md).
+
+The v1.2 payload also supports `deathDate`, `agency`, `caseStatus`, and a `display` object controlling structured facts, timeline, and sources. Death and incident dates remain separate. The owner projection replaces hidden field values with null, filters out unchecked sections/milestones/source references, and supplies the display flags used by the public renderer. `CONTENT_SOURCE=published` reads only the Supabase publication table. Private drafts, author IDs, settings, and source fingerprints never enter the public API.

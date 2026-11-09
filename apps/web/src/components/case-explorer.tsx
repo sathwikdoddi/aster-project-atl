@@ -4,8 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import type { CaseRecord } from "@aster/content/schema";
 import { categoryLabels } from "@aster/content/schema";
-import { formatDate, formatLocation } from "@aster/content/format";
+import {
+  formatDate,
+  formatLocation,
+  timelineDate,
+} from "@aster/content/format";
 import { Arrow, AsterMark, Pin, ViewIcon } from "./icons";
+
+const groupYear = (record: CaseRecord) =>
+  timelineDate(record)?.slice(0, 4) ??
+  (record.display ? "Date not shared" : "Undated");
 
 function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
   const [expanded, setExpanded] = useState(false);
@@ -21,7 +29,9 @@ function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
       </div>
       <div className="card-content">
         <div className="card-overline">
-          <span>Fictional sample</span>
+          <span>
+            {record.isDemo ? "Fictional sample" : "Remembering a life"}
+          </span>
           <span>
             {record.sections.length
               ? `${record.sections.length} documented ${record.sections.length === 1 ? "section" : "sections"}`
@@ -31,10 +41,12 @@ function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
         <h3 id={`name-${record.id}`}>
           <Link href={`/cases/${record.slug}`}>{record.name}</Link>
         </h3>
-        <p className="location">
-          <Pin />
-          {formatLocation(record.location)}
-        </p>
+        {record.display?.location !== false && (
+          <p className="location">
+            <Pin />
+            {formatLocation(record.location)}
+          </p>
+        )}
         <p className="card-summary">{record.summary}</p>
         <div className="tags">
           {record.passions.map((passion) => (
@@ -67,11 +79,11 @@ function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
                 : "Sections will appear as information is added."}
             </p>
             <p>
-              <strong>Timeline date:</strong> {formatDate(record.incidentDate)}
+              <strong>Timeline date:</strong> {formatDate(timelineDate(record))}
             </p>
             <p>
               {record.events.length
-                ? `${record.events.length} sample milestones, including undated memories.`
+                ? `${record.events.length} ${record.isDemo ? "sample milestones, including undated memories." : "documented milestones."}`
                 : "No individual milestones have been added yet."}
             </p>
           </div>
@@ -83,11 +95,8 @@ function CaseCard({ record, index }: { record: CaseRecord; index: number }) {
 
 export function CaseExplorer({ cases }: { cases: CaseRecord[] }) {
   const [view, setView] = useState<"timeline" | "grid">("timeline");
-  const groups = Array.from(
-    new Set(
-      cases.map((record) => record.incidentDate?.slice(0, 4) ?? "Undated"),
-    ),
-  );
+  const allDemo = cases.length > 0 && cases.every((record) => record.isDemo);
+  const groups = Array.from(new Set(cases.map((record) => groupYear(record))));
 
   return (
     <section
@@ -104,14 +113,15 @@ export function CaseExplorer({ cases }: { cases: CaseRecord[] }) {
           <p>Take your time. There is more to every story.</p>
         </div>
         <span className="record-count">
-          {cases.length} sample {cases.length === 1 ? "story" : "stories"}
+          {cases.length} {allDemo ? "sample " : ""}
+          {cases.length === 1 ? "story" : "stories"}
           <span className="count-dot" />
         </span>
       </div>
       <div className="explorer-toolbar">
         <p>
           {view === "timeline"
-            ? "Organized by incident year"
+            ? "Organized by recorded year"
             : "All stories, side by side"}
           <span className="toolbar-note"> · Most recent first</span>
         </p>
@@ -135,7 +145,7 @@ export function CaseExplorer({ cases }: { cases: CaseRecord[] }) {
         </div>
       </div>
       <p className="sr-only" role="status">
-        Showing {cases.length} sample stories in {view} view.
+        Showing {cases.length} {allDemo ? "sample " : ""}stories in {view} view.
       </p>
       {!cases.length ? (
         <div className="empty-state">
@@ -155,21 +165,18 @@ export function CaseExplorer({ cases }: { cases: CaseRecord[] }) {
             <section
               className="year-group"
               key={year}
-              aria-labelledby={`year-${year}`}
+              aria-labelledby={`year-${year.replace(/\s+/g, "-")}`}
             >
               <div className="year-label">
                 <span className="timeline-dot" />
-                <h3 id={`year-${year}`}>{year}</h3>
+                <h3 id={`year-${year.replace(/\s+/g, "-")}`}>{year}</h3>
                 {year === "Undated" && (
                   <span>Room for what’s still unknown</span>
                 )}
               </div>
               <div className="year-cases">
                 {cases
-                  .filter(
-                    (record) =>
-                      (record.incidentDate?.slice(0, 4) ?? "Undated") === year,
-                  )
+                  .filter((record) => groupYear(record) === year)
                   .map((record) => (
                     <CaseCard
                       key={record.id}

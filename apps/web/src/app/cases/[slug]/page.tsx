@@ -12,7 +12,9 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const record = await publicCaseRepository.findBySlug((await params).slug);
   return {
-    title: record ? `${record.name} — Sample story` : "Story not found",
+    title: record
+      ? `${record.name}${record.isDemo ? " — Sample story" : ""}`
+      : "Story not found",
   };
 }
 
@@ -22,6 +24,15 @@ export default async function CasePage({ params }: Props) {
   const sections = record.sections.filter(
     (section) => section.paragraphs.length,
   );
+  const display = record.display;
+  const hasFacts =
+    !display ||
+    display.birthDate ||
+    display.deathDate ||
+    display.incidentDate ||
+    display.location ||
+    display.agency ||
+    display.caseStatus;
   return (
     <main id="main" className="detail-page">
       <Link className="back-link" href="/#explore">
@@ -34,14 +45,18 @@ export default async function CasePage({ params }: Props) {
         <div className="detail-hero-copy">
           <p className="eyebrow">
             A LIFE TO REMEMBER{" "}
-            <span className="label-pill">Fictional sample</span>
+            {record.isDemo && (
+              <span className="label-pill">Fictional sample</span>
+            )}
           </p>
           <h1 id="case-name">{record.name}</h1>
           <p className="detail-summary">{record.summary}</p>
-          <p className="location">
-            <Pin />
-            {formatLocation(record.location)}
-          </p>
+          {display?.location !== false && (
+            <p className="location">
+              <Pin />
+              {formatLocation(record.location)}
+            </p>
+          )}
           <div className="tags">
             {record.passions.map((passion) => (
               <span key={passion}>{passion}</span>
@@ -53,14 +68,16 @@ export default async function CasePage({ params }: Props) {
           <span>A story worth holding.</span>
         </div>
       </section>
-      <aside className="fiction-notice">
-        <span aria-hidden="true">ⓘ</span>
-        <p>
-          <strong>This is a fictional demonstration record.</strong> Names,
-          memories, locations, and dates are invented for the prototype. This
-          page does not describe a real person, incident, or investigation.
-        </p>
-      </aside>
+      {record.isDemo && (
+        <aside className="fiction-notice">
+          <span aria-hidden="true">ⓘ</span>
+          <p>
+            <strong>This is a fictional demonstration record.</strong> Names,
+            memories, locations, and dates are invented for the prototype. This
+            page does not describe a real person, incident, or investigation.
+          </p>
+        </aside>
+      )}
       {(sections.length > 0 || record.events.length > 0) && (
         <nav className="section-nav" aria-label="Story sections">
           {sections.map(({ category }, index) => (
@@ -69,131 +86,167 @@ export default async function CasePage({ params }: Props) {
               {categoryLabels[category]}
             </a>
           ))}
-          {!!record.events.length && (
+          {!!record.events.length && display?.timeline !== false && (
             <a href="#milestones-heading">
               Timeline <Arrow diagonal />
             </a>
           )}
         </nav>
       )}
-      <div className="story-body">
-        <aside className="story-sidebar">
-          <p className="eyebrow">THE STORY AT A GLANCE</p>
-          <dl>
-            <div>
-              <dt>Born</dt>
-              <dd>{formatDate(record.birthDate)}</dd>
-            </div>
-            <div>
-              <dt>Incident date</dt>
-              <dd>{formatDate(record.incidentDate)}</dd>
-            </div>
-            <div>
-              <dt>Place</dt>
-              <dd>{formatLocation(record.location)}</dd>
-            </div>
-            <div>
-              <dt>Documentation</dt>
-              <dd>
-                {sections.length} documented{" "}
-                {sections.length === 1 ? "section" : "sections"}
-              </dd>
-            </div>
-          </dl>
-          <AsterMark />
-          <p className="sidebar-note">
-            A record can grow without losing sight of the person at its center.
-          </p>
-        </aside>
-        <div className="story-sections">
-          {sections.map((section, index) => {
-            const { category } = section;
-            return (
-              <section key={category} id={category} className="story-section">
-                <p className="eyebrow">
-                  <span className="section-number">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  {categoryLabels[category]}
-                </p>
-                <h2>{section?.title ?? categoryLabels[category]}</h2>
-                {section?.paragraphs.length ? (
-                  section.paragraphs.map((paragraph, i) => (
-                    <p key={i}>{paragraph}</p>
-                  ))
-                ) : (
-                  <div className="missing-content">
-                    <span className="missing-dot" />
-                    <p>This part of the story has not been documented yet.</p>
+      {(hasFacts || sections.length > 0 || !display) && (
+        <div className={`story-body ${!hasFacts ? "no-sidebar" : ""}`}>
+          {hasFacts && (
+            <aside className="story-sidebar">
+              <p className="eyebrow">THE STORY AT A GLANCE</p>
+              <dl>
+                {display?.birthDate !== false && (
+                  <div>
+                    <dt>Born</dt>
+                    <dd>{formatDate(record.birthDate)}</dd>
                   </div>
                 )}
-                {!!section?.sourceIds.length && (
-                  <p className="source-note">
-                    Source:{" "}
-                    {section.sourceIds
-                      .map(
-                        (id) =>
-                          record.sources.find((source) => source.id === id)
-                            ?.title,
-                      )
-                      .filter(Boolean)
-                      .join(", ")}
-                  </p>
+                {(display?.deathDate ?? !!record.deathDate) && (
+                  <div>
+                    <dt>Date of death</dt>
+                    <dd>{formatDate(record.deathDate)}</dd>
+                  </div>
                 )}
-              </section>
-            );
-          })}
-          {!sections.length && (
-            <section className="story-section">
-              <p className="eyebrow">ROOM FOR STORIES TO COME</p>
-              <h2>A story still taking shape.</h2>
-              <div className="missing-content">
-                <span className="missing-dot" />
-                <p>This part of the story has not been documented yet.</p>
-              </div>
-            </section>
+                {display?.incidentDate !== false && (
+                  <div>
+                    <dt>Incident date</dt>
+                    <dd>{formatDate(record.incidentDate)}</dd>
+                  </div>
+                )}
+                {display?.location !== false && (
+                  <div>
+                    <dt>Place</dt>
+                    <dd>{formatLocation(record.location)}</dd>
+                  </div>
+                )}
+                {(display?.agency ?? !!record.agency) && (
+                  <div>
+                    <dt>Police department / agency</dt>
+                    <dd>{record.agency}</dd>
+                  </div>
+                )}
+                {(display?.caseStatus ?? !!record.caseStatus) && (
+                  <div>
+                    <dt>Case status as recorded</dt>
+                    <dd>{record.caseStatus}</dd>
+                  </div>
+                )}
+                {!display && (
+                  <div>
+                    <dt>Documentation</dt>
+                    <dd>
+                      {sections.length} documented{" "}
+                      {sections.length === 1 ? "section" : "sections"}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+              <AsterMark />
+              <p className="sidebar-note">
+                A record can grow without losing sight of the person at its
+                center.
+              </p>
+            </aside>
           )}
-        </div>
-      </div>
-      <StoryTimeline events={record.events} sources={record.sources} />
-      <section className="sources-section" aria-labelledby="sources-heading">
-        <p className="eyebrow">CONTEXT & TRANSPARENCY</p>
-        <h2 id="sources-heading">Sources & documentation</h2>
-        <p className="muted">
-          A real record will link to reviewed source material. The content here
-          is for demonstration.
-        </p>
-        {record.sources.length ? (
-          <ul>
-            {record.sources.map((source) => (
-              <li key={source.id}>
-                <strong>
-                  {source.url ? (
-                    <a
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {source.title}{" "}
-                      <span className="sr-only">(opens in a new tab)</span>↗
-                    </a>
+          <div className="story-sections">
+            {sections.map((section, index) => {
+              const { category } = section;
+              return (
+                <section key={category} id={category} className="story-section">
+                  <p className="eyebrow">
+                    <span className="section-number">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    {categoryLabels[category]}
+                  </p>
+                  <h2>{section?.title ?? categoryLabels[category]}</h2>
+                  {section?.paragraphs.length ? (
+                    section.paragraphs.map((paragraph, i) => (
+                      <p key={i}>{paragraph}</p>
+                    ))
                   ) : (
-                    source.title
+                    <div className="missing-content">
+                      <span className="missing-dot" />
+                      <p>This part of the story has not been documented yet.</p>
+                    </div>
                   )}
-                </strong>
-                {source.note && <p>{source.note}</p>}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No sources have been added yet.</p>
-        )}
-        <p className="source-note">
-          {record.updatedAt
-            ? `Record last updated ${formatDate(record.updatedAt)}`
-            : "Record update date not yet documented."}
-        </p>
-      </section>
+                  {!!section?.sourceIds.length && (
+                    <p className="source-note">
+                      Source:{" "}
+                      {section.sourceIds
+                        .map(
+                          (id) =>
+                            record.sources.find((source) => source.id === id)
+                              ?.title,
+                        )
+                        .filter(Boolean)
+                        .join(", ")}
+                    </p>
+                  )}
+                </section>
+              );
+            })}
+            {!sections.length && !display && (
+              <section className="story-section">
+                <p className="eyebrow">ROOM FOR STORIES TO COME</p>
+                <h2>A story still taking shape.</h2>
+                <div className="missing-content">
+                  <span className="missing-dot" />
+                  <p>This part of the story has not been documented yet.</p>
+                </div>
+              </section>
+            )}
+          </div>
+        </div>
+      )}
+      {display?.timeline !== false && (
+        <StoryTimeline events={record.events} sources={record.sources} />
+      )}
+      {display?.sources !== false && (
+        <section className="sources-section" aria-labelledby="sources-heading">
+          <p className="eyebrow">CONTEXT & TRANSPARENCY</p>
+          <h2 id="sources-heading">Sources & documentation</h2>
+          <p className="muted">
+            {record.isDemo
+              ? "A real record will link to reviewed source material. The content here is for demonstration."
+              : "Source information shared with this profile by The Aster Project."}
+          </p>
+          {record.sources.length ? (
+            <ul>
+              {record.sources.map((source) => (
+                <li key={source.id}>
+                  <strong>
+                    {source.url ? (
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {source.title}{" "}
+                        <span className="sr-only">(opens in a new tab)</span>↗
+                      </a>
+                    ) : (
+                      source.title
+                    )}
+                  </strong>
+                  {source.note && <p>{source.note}</p>}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No sources have been added yet.</p>
+          )}
+          <p className="source-note">
+            {record.updatedAt
+              ? `Record last updated ${formatDate(record.updatedAt)}`
+              : "Record update date not yet documented."}
+          </p>
+        </section>
+      )}
       <div className="detail-end">
         <AsterMark />
         <p>{record.remembrance ?? "Every story deserves room to be told."}</p>

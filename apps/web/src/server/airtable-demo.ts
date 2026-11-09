@@ -110,6 +110,9 @@ export function createAirtableDemoRepository(
             },
             birthDate,
             incidentDate,
+            deathDate: null,
+            agency: null,
+            caseStatus: null,
             passions: [],
             color: identity.color,
             sections:

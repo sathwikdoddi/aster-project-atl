@@ -1,26 +1,30 @@
 # Verification
 
-## November 9, 2026 — Airtable demo integration
+## November 9, 2026 — Owner dashboard and publishing
 
-| Check                         | Result                                                                                                                                      |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm test`                    | Passed: 10 tests (4 Airtable mapping/access-boundary tests and 6 shared content tests).                                                     |
-| `npm run typecheck`           | Passed for the public app and shared package, including route type generation.                                                              |
-| `npm run build`               | Passed production compilation, TypeScript validation, and static page generation. The homepage and case endpoints render dynamically.       |
-| `npm run test:e2e`            | Passed: all 8 desktop/mobile tests using isolated local fixtures.                                                                           |
-| Live Airtable adapter         | Returned exactly Taylor Brooks and Morgan Reed from the demo Cases table. Missing birth date and unknown modification date remain null.     |
-| Live production browser check | Passed on desktop and mobile: archive/grid, both profiles, milestone selection, no horizontal overflow, and no browser script errors.       |
-| Public data boundary          | Verified API/HTML exclude the seeded internal-note marker and API credential. Browser requests go to the website, not directly to Airtable. |
-| Seed command rerun            | Passed: both existing fictional records were preserved; no duplicate cases were created.                                                    |
+| Check                | Result                                                                                                                                                                                                                                                         |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm test`           | Passed: 18 tests covering normalization, origin checks, production demo restrictions, content contracts, projection, persistence, and the actual SQL migration.                                                                                                |
+| `npm run typecheck`  | Passed across both apps and both shared packages.                                                                                                                                                                                                              |
+| `npm run build`      | Production builds validated for both Next.js apps.                                                                                                                                                                                                             |
+| Public browser suite | Passed: 8 desktop/mobile tests for timeline/grid navigation, case pages, partial records, and public API responses.                                                                                                                                            |
+| Admin browser suite  | Passed: 4 desktop/mobile tests for search, empty states, saving, previewing, publishing, revising, and unpublishing fictional profiles.                                                                                                                        |
+| Publication boundary | Unchecked birth date and its milestone are absent from the public payload. Draft revisions leave the current public snapshot unchanged; unpublishing returns a public API 404.                                                                                 |
+| SQL authorization    | Executed the migration and owner bootstrap in isolated PostgreSQL via PGlite. Owner operations succeed; nonowners and anonymous clients cannot modify publications or read private drafts/history; self-authorization is denied. Stale revisions are rejected. |
+| Live Supabase setup  | Auth endpoint responds; anonymous publication reads succeed, while private draft and membership reads are denied. No live publication records were created during automated tests.                                                                             |
 
-The two fictional records were added only to **Asterx180 demo → Cases**. The other base was not modified. Screenshots were reviewed locally and kept outside Git.
+The browser publishing suite uses fictional fixtures and an isolated temporary local store. It never writes to Airtable or Supabase. The real Family Case Management Base remains read-only; family contact fields and attachment URLs are excluded from the admin source payload.
 
-Validated against the root lockfile: Node.js 22.14.0, Next.js 16.4.1, React 19.3.1, TypeScript 5.9.3, and Playwright 1.64.1. Final checks used a temporary native Apple Silicon Node runtime because the existing x86 Node installation made cold checks slow under Rosetta; no global Node settings were changed.
+The first browser run exposed a localhost/127.0.0.1 origin mismatch that blocked saving. The origin check now uses the browser's destination host locally, with an explicit `ADMIN_ORIGIN` setting for hosted deployments; a regression test covers allowed and rejected origins. Browser assertion timeouts allow cold Next.js development compilation.
 
-The ignored root `.env` selects the live demo locally. Fresh clones default to mock content until configured. The local production server runs at http://127.0.0.1:3000 and reads demo updates on refresh after the 30-second cache interval.
+Validated with Node.js 22.14.0, Next.js 16.4.1, React 19.3.1, TypeScript 5.9.3, and Playwright 1.64.1. Checks used a temporary native Apple Silicon Node runtime; no global runtime settings were changed. Fictional dashboard/editor screenshots were reviewed locally and kept outside Git.
+
+## Live owner check
+
+The owner enters the password they created for `admin@admin.com` in the dashboard login form. A positive sign-in against that actual account has not been automated because its password is not available to the development agent. The SQL owner workflow and fictional UI workflow are tested separately as described above.
+
+Local configuration selects approved Supabase snapshots. The public site starts empty until the owner explicitly publishes a profile. Existing fictional Airtable demo records remain available through the separate development mode.
 
 ## Remaining work
 
-The owner dashboard is a reserved workspace. Authentication, display selections, approved snapshots, publishing/unpublishing, Supabase, and hosted deployment are not implemented. The current live reader is restricted to the two explicit fictional demo IDs, not all Airtable records. See `docs/architecture.md` for the planned publication boundary.
-
-The repository reorganization was committed and pushed separately before the Airtable demo was seeded.
+Photo/document publication, editable source links, invitation/password recovery screens, and an audit-history viewer are not included. The dashboard shows media/link availability counts. Hosted deployment remains separate from the local servers and GitHub source. Setup and workflow documentation is in [docs/admin-setup.md](docs/admin-setup.md).

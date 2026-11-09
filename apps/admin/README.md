@@ -1,15 +1,17 @@
-# Owner dashboard — planned
+# Aster owner workspace
 
-This folder reserves a separate app for the Aster Project owner. It contains no running dashboard, authentication, admin API, or publish controls yet.
+Authenticated profile review and publishing app, normally at http://127.0.0.1:3001.
 
-The intended dashboard will:
+From the repository root, run `npm run dev:admin`. Supabase URL/publishable key, the SQL migration, and an authorized Auth user are required. See [admin setup](../../docs/admin-setup.md).
 
-- Require owner authentication and enforce authorization on every server action/API.
-- Read the evolving Airtable case records, including incomplete cases.
-- Let the owner choose cases, sections, milestones, and media for public display.
-- Preview the selected public content without making drafts public.
-- Publish a validated snapshot, republish changes, or unpublish a case.
+- `src/server/auth.ts`: verified owner sessions and same-origin mutation checks.
+- `src/server/sources.ts`: read-only, allowlisted fields from Airtable Family Profiles; contact details and attachment URLs are excluded.
+- `src/app/api`: authenticated workspace, draft, publish/unpublish, and session endpoints.
+- `src/components/dashboard.tsx`: profile search, source review, display settings, and draft/published previews.
+- `src/proxy.ts`: session cookie refresh; server endpoints independently enforce authorization.
 
-Private Airtable fields and credentials stay on the server. Use `@aster/content/schema` for the published output; introduce separate private-record and selection contracts when the Airtable fields are agreed. Do not put private fixtures in the public content package.
+Shared projection/storage code lives in `packages/publishing`. Publication functions and access policies live in `supabase/migrations`. The public app reads approved snapshots only in published mode.
 
-See [the architecture plan](../../docs/architecture.md) for storage, permissions, and setup decisions. A future Next.js app here can run on a separate port/domain; no admin start command exists yet.
+For a fictional local-only development workflow, use `ADMIN_MODE=demo npm run dev:admin`. This bypass is disabled in production and restricted to loopback hosts. It never reads the real Airtable base or writes real-person snapshots to local storage.
+
+The first version supports text, facts, sections, and timeline selections. Photo/document publication and a history viewer are not included yet.

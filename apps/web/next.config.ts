@@ -9,7 +9,7 @@ if (existsSync(localEnv)) loadEnvFile(localEnv);
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  transpilePackages: ["@aster/content"],
+  transpilePackages: ["@aster/content", "@aster/publishing"],
   turbopack: { root: repositoryRoot },
   outputFileTracingRoot: repositoryRoot,
 };

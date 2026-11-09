@@ -20,7 +20,7 @@ export async function GET(
       );
     return Response.json({
       data: record,
-      meta: { schemaVersion: "1.1", dataSource: publicDataSource },
+      meta: { schemaVersion: "1.2", dataSource: publicDataSource },
     });
   } catch (error) {
     console.error("Unable to load case", error);

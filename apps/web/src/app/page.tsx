@@ -71,8 +71,9 @@ export default async function Home() {
             can move at your own pace.
           </p>
           <p className="prototype-note">
-            This preview contains fictional examples only. Real case information
-            will be added after Aster’s review.
+            {cases.every((record) => record.isDemo) && cases.length
+              ? "This preview contains fictional examples only. Real case information will be added after Aster’s review."
+              : "Stories appear here after review and publication by The Aster Project."}
           </p>
         </div>
         <Link className="text-link" href="/about">

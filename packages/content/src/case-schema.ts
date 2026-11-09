@@ -47,6 +47,21 @@ export const caseSchema = z
     }),
     birthDate: partialDateSchema.nullable(),
     incidentDate: partialDateSchema.nullable(),
+    deathDate: partialDateSchema.nullable().default(null),
+    agency: z.string().nullable().default(null),
+    caseStatus: z.string().nullable().default(null),
+    display: z
+      .object({
+        birthDate: z.boolean(),
+        deathDate: z.boolean(),
+        incidentDate: z.boolean(),
+        location: z.boolean(),
+        agency: z.boolean(),
+        caseStatus: z.boolean(),
+        timeline: z.boolean(),
+        sources: z.boolean(),
+      })
+      .optional(),
     passions: z.array(z.string().min(1)),
     color: z.enum(["lavender", "sage", "peach"]),
     sections: z.array(

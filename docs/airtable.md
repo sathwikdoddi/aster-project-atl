@@ -1,6 +1,6 @@
 # Airtable demo
 
-The website can read two fictional cases from **Asterx180 demo → Cases**. The other base and the internal Families, Contacts, Activity Logs, Agencies, Records Requests, and Files and Media tables are not used by this adapter.
+The optional `airtable-demo` mode can read two fictional cases from **Asterx180 demo → Cases**. The other base and the internal Families, Contacts, Activity Logs, Agencies, Records Requests, and Files and Media tables are not used by this adapter.
 
 ## Local setup
 
@@ -41,4 +41,4 @@ The adapter follows API pagination, times out requests, shares concurrent loads,
 
 ## Following phase
 
-The live connection is deliberately a fictional demo. It does not implement approval, authentication, or owner publishing. The next phase can keep Airtable as the working-record system and use Supabase for owner authentication, saved selections, and versioned published snapshots. The public app would then read only those approved snapshots; see [architecture](architecture.md).
+The live connection is deliberately a fictional demo. It does not implement approval, authentication, or owner publishing. The owner workspace now reads the real Family Profiles base behind Supabase owner authentication and publishes selected snapshots separately. Use `CONTENT_SOURCE=published` for that workflow. See [admin setup](admin-setup.md) and [architecture](architecture.md).

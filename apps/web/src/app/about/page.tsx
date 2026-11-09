@@ -37,28 +37,29 @@ export default function AboutPage() {
           <section id="prototype">
             <h2>About this prototype</h2>
             <p>
-              This is a development prototype. All names, stories, locations,
-              and dates in the archive are fictional examples. They do not
-              document real people or police incidents.
+              {process.env.CONTENT_SOURCE === "published"
+                ? "Profiles are shared here after review and publication by The Aster Project. Any fictional demonstration profiles are clearly labeled."
+                : "This is a development prototype. All names, stories, locations, and dates in this demo are fictional examples. They do not document real people or police incidents."}
             </p>
             <p>
-              The archive uses fictional profiles to demonstrate the structure.
-              Missing information is shown openly, and illustrations are
-              abstract flowers rather than photographs of real people.
+              The archive makes room for detailed stories and profiles that are
+              still being documented. Missing information is shown openly, and
+              illustrations are abstract flowers rather than photographs of real
+              people.
             </p>
           </section>
           <section>
             <h2>Building a shared foundation.</h2>
             <p>
-              The website can read fictional cases from Aster’s Airtable demo
-              base through its backend. The live demo is limited to specifically
-              identified sample records.
+              Working records are maintained in Airtable. The owner workspace
+              selects the content to share and saves approved public versions
+              separately.
             </p>
             <p>
-              A future owner dashboard will control which information is
-              published. The source review and publication workflow still need
-              to be agreed with Aster and 180 Consulting. Real case material
-              should be reviewed and approved before it is added.
+              The owner dashboard controls which information is published. The
+              source review and publication workflow still need to be agreed
+              with Aster and 180 Consulting. Real case material should be
+              reviewed and approved before it is added.
             </p>
           </section>
           <Link className="button primary" href="/#explore">

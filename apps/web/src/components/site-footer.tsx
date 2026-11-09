@@ -16,8 +16,10 @@ export function SiteFooter() {
       <div className="footer-bottom">
         <p>The Aster Project · Development prototype</p>
         <p>
-          All records in this preview are fictional.{" "}
-          <Link href="/about#prototype">About this prototype</Link>
+          {process.env.CONTENT_SOURCE === "published"
+            ? "Stories shared with care. "
+            : "All records in this preview are fictional. "}
+          <Link href="/about#prototype">About the archive</Link>
         </p>
       </div>
     </footer>

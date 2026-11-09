@@ -10,6 +10,13 @@ export function formatDate(value: string | null): string {
   }).format(new Date(Date.UTC(year, month - 1, day || 1)));
 }
 
+export function timelineDate(record: {
+  deathDate?: string | null;
+  incidentDate: string | null;
+}): string | null {
+  return record.deathDate ?? record.incidentDate;
+}
+
 export function formatLocation(location: {
   city: string | null;
   state: string | null;

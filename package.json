@@ -8,8 +8,10 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace=@aster/web --",
+    "dev:admin": "npm run dev --workspace=@aster/admin --",
     "build": "npm run build --workspaces --if-present",
     "start": "npm run start --workspace=@aster/web --",
+    "start:admin": "npm run start --workspace=@aster/admin --",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:e2e": "npm run test:e2e --workspace=@aster/web",

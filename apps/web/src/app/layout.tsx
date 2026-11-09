@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: "%s | The Aster Project",
   },
   description:
-    "An interactive prototype for remembering lives and exploring documented cases. All current records are fictional demonstration content.",
+    "Remembering lives and exploring the stories shared by The Aster Project.",
   robots: { index: false, follow: false },
   icons: { icon: "/icon.svg" },
 };
@@ -18,15 +18,16 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body>
         <a className="skip-link" href="#main">
           Skip to content
         </a>
         <div className="demo-banner">
-          <span className="demo-dot" /> A work in progress{" "}
-          <span className="banner-divider">/</span> Fictional sample stories for
-          demonstration
+          <span className="demo-dot" />{" "}
+          {process.env.CONTENT_SOURCE === "published"
+            ? "The Aster Project · Stories shared with care"
+            : "A work in progress / Fictional sample stories for demonstration"}
         </div>
         <SiteHeader />
         {children}

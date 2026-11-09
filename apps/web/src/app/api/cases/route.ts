@@ -9,7 +9,7 @@ export async function GET() {
       data: cases,
       meta: {
         count: cases.length,
-        schemaVersion: "1.1",
+        schemaVersion: "1.2",
         dataSource: publicDataSource,
       },
     });

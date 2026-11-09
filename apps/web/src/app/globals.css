@@ -12,6 +12,9 @@
   --sans:
     "Aster Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
+.story-body.no-sidebar {
+  grid-template-columns: 1fr;
+}
 
 * {
   box-sizing: border-box;

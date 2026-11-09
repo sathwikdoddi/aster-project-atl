@@ -110,7 +110,7 @@ test("API returns the shared mock schema and a stable not-found response", async
   const payload = await list.json();
   expect(payload.meta).toEqual({
     count: 3,
-    schemaVersion: "1.1",
+    schemaVersion: "1.2",
     dataSource: "mock",
   });
   expect(
