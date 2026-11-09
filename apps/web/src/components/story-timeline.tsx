@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { CaseRecord } from "@/lib/case-schema";
-import { categoryLabels } from "@/lib/case-schema";
-import { formatDate, sortByDate } from "@/lib/format";
+import type { CaseRecord } from "@aster/content/schema";
+import { categoryLabels } from "@aster/content/schema";
+import { formatDate, sortByDate } from "@aster/content/format";
 
 export function StoryTimeline({
   events,

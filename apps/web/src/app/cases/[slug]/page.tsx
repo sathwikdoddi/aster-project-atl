@@ -3,21 +3,21 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { AsterMark, Arrow, Pin } from "@/components/icons";
 import { StoryTimeline } from "@/components/story-timeline";
-import { caseRepository } from "@/lib/cases";
-import { categories, categoryLabels } from "@/lib/case-schema";
-import { formatDate, formatLocation } from "@/lib/format";
+import { publicCaseRepository } from "@/server/public-cases";
+import { categories, categoryLabels } from "@aster/content/schema";
+import { formatDate, formatLocation } from "@aster/content/format";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const record = await caseRepository.findBySlug((await params).slug);
+  const record = await publicCaseRepository.findBySlug((await params).slug);
   return {
     title: record ? `${record.name} — Sample story` : "Story not found",
   };
 }
 
 export default async function CasePage({ params }: Props) {
-  const record = await caseRepository.findBySlug((await params).slug);
+  const record = await publicCaseRepository.findBySlug((await params).slug);
   if (!record) notFound();
   return (
     <main id="main" className="detail-page">

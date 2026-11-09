@@ -1,79 +1,54 @@
 # The Aster Project
 
-An initial local Next.js + React prototype for exploring lives and cases. Built for the October 12–18 milestone. **Every current record is fictional**, including names, dates, locations, and narrative content.
+A public archive of lives and cases, with a planned owner dashboard for deciding what visitors can see. This repository uses npm workspaces so both websites can share content contracts while being deployed separately.
+
+**Current status:** the public Next.js website works with fictional sample content. The admin folder is a placeholder; Airtable, login, selection controls, and publishing are not connected yet.
+
+## Structure
+
+```text
+apps/
+  web/                  Existing public website, case pages, and read-only API
+  admin/                Reserved for the future authenticated owner dashboard
+packages/
+  content/              Shared public schemas, formatting, repository interface,
+                        fictional published-content fixtures, and unit tests
+docs/
+  architecture.md       Publishing flow and setup needed next
+  data-contract.md      Current public payload and API contract
+```
 
 ## Run locally
 
-Node.js 20.9+ is required (Node 22 recommended).
+Requires Node.js 20.9+ and npm (Node 22 recommended). From the repository root:
 
 ```sh
-cd ~/Desktop/aster-project
-npm install
+npm ci
 npm run dev
 ```
 
-Open http://127.0.0.1:3000. No account, database, API key, or environment variables are needed. The dev server binds to your own computer. If port 3000 is occupied, use `npm run dev -- --port 3001`.
+Open http://127.0.0.1:3000. No credentials or database are required for the mock site. For another port: `npm run dev -- --port 3001`. There is no admin app to start yet.
 
-Next.js provides both the React frontend and server-side API in this single project. There is no separate Express server to start. The included `package-lock.json` pins the installed dependencies; use `npm ci` for subsequent reproducible installs.
+## Content and publishing
 
-## Included in this milestone
+The intended flow is **Airtable working records → owner review and selection → published snapshot → public website**. New or edited Airtable information stays private until the owner publishes it. Editing a draft after publication should leave the existing published version unchanged.
 
-- Responsive archive with an interactive timeline grouped by incident year, expandable case previews, and a grid view.
-- Dedicated case pages organized into Early Life, Passions, Death, Investigation, and Legacy.
-- Clickable individual milestones with dated and undated events.
-- One detailed fictional case, one partial case, and one minimal case.
-- A typed, runtime-validated mock-data schema and shared repository adapter.
-- Read-only Next.js API routes at `/api/cases` and `/api/cases/:slug`.
-- About page, keyboard focus styles, skip navigation, reduced-motion support, deliberate missing-content states, loading/error screens, and unknown-case handling.
-- Schema tests and browser integration tests for the main interactions.
+The current fixtures represent the **public output** of that future workflow, not Airtable's internal tables. Edit `packages/content/src/mock/published-cases.json` to change the demo. Unknown dates use `null`; omitted sections show missing-content states. Keep all sample content fictional.
 
-Search/filtering, live data, editing tools, authentication, and deployment are deferred to later milestones. No remote Git repository or hosted deployment has been created.
+The public app reads through `apps/web/src/server/public-cases.ts`. Its pages and `/api/cases` endpoints share this repository. Later, replace the mock adapter with a read-only published-content adapter; raw Airtable data belongs behind the admin backend.
 
-## Where to work
-
-```text
-src/
-  app/
-    page.tsx                   Homepage and archive
-    globals.css                Shared responsive styling
-    cases/[slug]/page.tsx      Individual case page
-    api/cases/                 Read-only JSON endpoints
-    about/page.tsx             Purpose and prototype context
-  components/
-    case-explorer.tsx          Timeline/grid and expandable cards
-    story-timeline.tsx         Interactive individual milestones
-  data/cases.json              The editable fictional sample records
-  lib/
-    case-schema.ts             Proposed shared schema and TypeScript types
-    cases.ts                   Server-only repository; future integration point
-    format.ts                  Partial dates, locations, chronological ordering
-docs/data-contract.md          API format and questions for 180 Consulting
-tests/                        Schema and browser integration checks
-```
-
-## Add or edit a sample
-
-Edit `src/data/cases.json`. Duplicate a record, give it a unique `id` and URL-safe `slug`, and update its content. Use `null` for unknown dates/locations and empty arrays for information that has not been added. Omit a section from `sections` to show its missing-content state. Reference source IDs that exist on the same record. Run `npm test` after changes. No component edits are needed to add another record.
-
-The mock repository validates the records and supplies both the pages and API. Replace that adapter after 180 Consulting confirms the storage system. See [the proposed data contract](docs/data-contract.md) for the field mapping and meeting checklist. The proposal has not yet been agreed with 180 Consulting.
+See [architecture and next setup](docs/architecture.md) and [the public data contract](docs/data-contract.md).
 
 ## Checks
 
 ```sh
-npm test
-npm run typecheck
-npm run build
-```
-
-Browser checks start their own server on port 3100:
-
-```sh
+npm test                 # Shared content schema tests
+npm run typecheck        # Public app and shared package
+npm run build            # Public app production build
 npx playwright install chromium
-npm run test:e2e
+npm run test:e2e         # Desktop/mobile checks; starts a server on port 3100
 ```
 
-The browser suite covers desktop/mobile overflow, timeline/grid switching, expansion, case navigation, milestone selection, missing content, 404s, and the API. The full accessibility and cross-device audit remains a later milestone.
+`npm start` serves the public production build; `npm run format` formats source and docs. Run installation at the repository root and commit the single root lockfile. When setting up hosting, deploy each app from this repository with its own environment settings; the public app lives in `apps/web`.
 
-## Verification
-
-See `VERIFICATION.md` for checks actually completed during initial setup and any environment limitations.
+Actual verification results are recorded in [VERIFICATION.md](VERIFICATION.md).

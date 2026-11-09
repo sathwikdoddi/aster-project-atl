@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import cases from "../src/data/cases.json";
+import cases from "../src/mock/published-cases.json";
 import {
   caseCollectionSchema,
   caseSchema,
   partialDateSchema,
-} from "../src/lib/case-schema";
-import { formatDate, formatLocation, sortByDate } from "../src/lib/format";
+} from "../src/case-schema";
+import { formatDate, formatLocation, sortByDate } from "../src/format";
 
 test("all sample records are valid, fictional, and cover full and partial stories", () => {
   const records = caseCollectionSchema.parse(cases);

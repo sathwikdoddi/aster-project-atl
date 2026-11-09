@@ -1,14 +1,13 @@
 # Verification
 
-Verified on October 15, 2026, with Node.js 22.14.0, Next.js 16.4.1, React 19.3.1, and TypeScript 5.9.3. Dependencies are installed and pinned in `package-lock.json`.
+## November 9, 2026 — workspace reorganization
 
-| Check               | Result                                                                                                                                                                      |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm test`          | Passed: 6 tests covering mock schema, fictional sample labeling, partial dates, invalid dates, missing fields, duplicate identifiers, source references/URLs, and ordering. |
-| `npm run typecheck` | Passed.                                                                                                                                                                     |
-| `npm run build`     | Passed: optimized production build, TypeScript validation, and static page generation. Both JSON endpoints and the dynamic case route compiled successfully.                |
-| `npm run test:e2e`  | Blocked before tests could execute: this sandbox denies opening `127.0.0.1:3100` (`listen EPERM`).                                                                          |
+- `npm test`: passed all 6 shared content tests.
+- `npm run typecheck`: passed for `apps/web` and `packages/content`, including Next.js route type generation.
+- `npm run build`: passed production compilation, TypeScript validation, and static page generation. Both API endpoints and the dynamic case page compiled.
+- Browser tests are retained in `apps/web/tests/e2e`; they have not yet been rerun for this reorganization.
+- `git diff --cached --check`: passed.
 
-The browser suite is included for desktop and mobile. Run `npx playwright install chromium` and `npm run test:e2e` in a normal terminal. No browser preview, interaction assertions, or visual/device verification was completed in this sandbox. Responsive CSS and accessibility support have been implemented, but those require browser review.
+Verified using Node.js 22.14.0, Next.js 16.4.1, React 19.3.1, and TypeScript 5.9.3. The root lockfile pins all workspace dependencies. The local x86 Node installation runs through Rosetta, which made cold startup and type checking slow.
 
-The app has not been deployed and has no live datastore connection. The schema is a proposal pending discussion with 180 Consulting. All current records are fictional.
+At this checkpoint, the public app still uses fictional fixtures. The admin dashboard, Airtable integration, and publishing controls are not implemented. A follow-up Airtable demo connection is the next task.

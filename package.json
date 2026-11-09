@@ -1,30 +1,22 @@
 {
-  "name": "aster-project",
+  "name": "aster-project-atl",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev --hostname 127.0.0.1",
-    "build": "next build",
-    "start": "next start --hostname 127.0.0.1",
-    "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test tests/*.test.ts",
-    "test:e2e": "playwright test",
+    "dev": "npm run dev --workspace=@aster/web --",
+    "build": "npm run build --workspaces --if-present",
+    "start": "npm run start --workspace=@aster/web --",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "npm run test:e2e --workspace=@aster/web",
     "format": "prettier --write ."
   },
-  "dependencies": {
-    "next": "^16.0.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "zod": "^4.0.0"
-  },
   "devDependencies": {
-    "@playwright/test": "^1.58.0",
-    "@types/node": "^22.0.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "prettier": "^3.9.10",
-    "tsx": "^4.20.0",
-    "typescript": "^5.9.0"
+    "prettier": "^3.9.10"
   },
   "engines": {
     "node": ">=20.9.0"

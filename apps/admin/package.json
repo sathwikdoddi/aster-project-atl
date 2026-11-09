@@ -1,0 +1,6 @@
+{
+  "name": "@aster/admin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reserved for the future authenticated Aster owner dashboard. No application or publish controls are implemented yet."
+}

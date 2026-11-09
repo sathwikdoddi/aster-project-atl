@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { CaseRecord } from "@/lib/case-schema";
-import { categoryLabels } from "@/lib/case-schema";
-import { formatDate, formatLocation } from "@/lib/format";
+import type { CaseRecord } from "@aster/content/schema";
+import { categoryLabels } from "@aster/content/schema";
+import { formatDate, formatLocation } from "@aster/content/format";
 import { Arrow, AsterMark, Pin, ViewIcon } from "./icons";
 
 function CaseCard({ record, index }: { record: CaseRecord; index: number }) {

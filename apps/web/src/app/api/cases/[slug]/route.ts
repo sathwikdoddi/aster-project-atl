@@ -1,4 +1,4 @@
-import { caseRepository } from "@/lib/cases";
+import { publicCaseRepository } from "@/server/public-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   try {
-    const record = await caseRepository.findBySlug((await params).slug);
+    const record = await publicCaseRepository.findBySlug((await params).slug);
     if (!record)
       return Response.json(
         {

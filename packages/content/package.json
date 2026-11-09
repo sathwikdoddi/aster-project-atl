@@ -1,0 +1,23 @@
+{
+  "name": "@aster/content",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./schema": "./src/case-schema.ts",
+    "./format": "./src/format.ts",
+    "./repository": "./src/repository.ts",
+    "./mock": "./src/mock-repository.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

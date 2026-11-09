@@ -1,10 +1,10 @@
-import { caseRepository } from "@/lib/cases";
+import { publicCaseRepository } from "@/server/public-cases";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const cases = await caseRepository.list();
+    const cases = await publicCaseRepository.list();
     return Response.json({
       data: cases,
       meta: { count: cases.length, schemaVersion: "1.0", dataSource: "mock" },

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { CaseExplorer } from "@/components/case-explorer";
 import { AsterMark, Arrow } from "@/components/icons";
-import { caseRepository } from "@/lib/cases";
+import { publicCaseRepository } from "@/server/public-cases";
 
 export default async function Home() {
-  const cases = await caseRepository.list();
+  const cases = await publicCaseRepository.list();
   return (
     <main id="main">
       <section className="hero" aria-labelledby="hero-heading">
